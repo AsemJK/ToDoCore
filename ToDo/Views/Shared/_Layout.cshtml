@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - ToDo</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/font-awesome/css/all.min.css" />
 </head>
 <body>
     <header>
@@ -24,10 +25,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li>
+                            <a class="nav-link text-dark float-right" asp-action="ToDoAdd" asp-controller="Home">New</i></a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
+       
     </header>
     <div class="container">
         <main role="main" class="pb-3">

@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ToDoCore.Api;
+using ToDoCore.Services;
+using ToDoCore.Helper;
 using ToDoCore.Models;
 
 namespace ToDoCore.Controllers
@@ -15,33 +16,33 @@ namespace ToDoCore.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IRestServices _restServices;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+            IRestServices restServices)
         {
             _logger = logger;
+            _restServices = restServices;
         }
 
         public async Task<IActionResult> Index()
         {
-            //ViewBag.BaseApiUrl = "http://saas.pbmscore.com";
-            ViewBag.BaseApiUrl = "http://localhost:5121";
-            ViewBag.ApiKey = "QV0UV1JMXMT1L2S606ZI";
-            ViewBag.CompanyId = 1;
-            RestClient api = new RestClient();
-            var vmodel = await api.GetToDoList(ViewBag.BaseApiUrl, ViewBag.ApiKey, ViewBag.CompanyId);
-            return View(vmodel);
+            ToDoViewModel model = new ToDoViewModel();
+            model.Tenants = await _restServices.GetTenantsList();
+            return View(model);
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> ToDos(int tenant)
+        public async Task<IActionResult> PartialToDos(int tenant)
         {
-            //ViewBag.BaseApiUrl = "http://saas.pbmscore.com";
-            ViewBag.BaseApiUrl = "http://localhost:5121";
-            ViewBag.ApiKey = "QV0UV1JMXMT1L2S606ZI";
-            ViewBag.CompanyId = 1;
-            RestClient api = new RestClient();
-            var vmodel = await api.GetToDoList(ViewBag.BaseApiUrl, ViewBag.ApiKey, tenant);
-            return View("Index",vmodel);
+            var vmodel = await _restServices.GetToDoList(tenant);
+            return PartialView("_ToDoListPartial", vmodel);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> ToDoAdd(ToDo todo)
+        {
+            return View(todo);
         }
         public IActionResult Privacy()
         {

@@ -1,18 +1,23 @@
-﻿@model List<ToDo>
+﻿@model ToDoViewModel
 @{
     ViewData["Title"] = "Home Page";
-    var baseApiUrl = ViewBag.BaseApiUrl;
-    var userApiKey = ViewBag.ApiKey;
-    var companyId = ViewBag.CompanyId;
 }
-<div class="container">
+<div class="container" style="display: none">
     <h3>Filters</h3>
-    <form action="/ToDos" method="get">
-        <label>Tenant</label>
-        <input name="tenant" class="form-control-sm" placeholder="Tenant" />
-    </form>
-    
+    <label>Tenant</label>
+    <input name="tenant" onkeyup="filterByTenant(this.value)" class="form-control-sm" placeholder="Type Tenant No" />
+
 </div>
+@*<a asp-controller="Home" asp-action="ToDoAdd" style="width: 100px;text-align: center" class="btn btn-group-lg"><i class="fa-solid fa-circle-plus"></i></a>*@
+
+<div class="toolbar">
+    <button class="btn btn-primary btn-round" id="mymodalbtn" data-toggle="modal" data-target="#NewToDoModal"><i class="fa-solid fa-square-plus"></i> Add</button>
+</div>
+
+<div id="divToDos" class="container" style="display: none">
+    @*@await Html.PartialAsync("_ToDoListPartial*@
+</div>
+
 <div class="table-responsive">
     <table id="datatable_ToDoList" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
@@ -26,28 +31,70 @@
                 <th class="disabled-sorting text-right"></th>
             </tr>
         </thead>
-        <tbody>
-            @foreach(var item in Model)
-            {
-                <tr>
-                    <td>@item.Id</td>
-                    <td>@item.ToDoSubject</td>
-                    <td>@item.TeamMember</td>
-                    <td>@item.CreationDate</td>
-                    <td>@item.LastStatus</td>
-                    <td>@item.CompanyId</td>
-                    <td></td>
-                </tr>
-            }
-        </tbody>
     </table>
 </div>
+
+<div class="modal fade" id="NewToDoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Details</h4>
+            </div>
+            <div class="modal-body">
+                <form enctype="multipart/form-data" name="formFiles">
+                    <div class="form-group" style="display : none">
+                        <label for="ToDoId">Id</label>
+                        <input type="text" class="form-control" id="ToDoId" placeholder="Id" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-3">Tenants</div>
+                            <div class="col-sm-9">
+                                <select asp-for="TenantId" class="form-control" id="dlToDoTenants">
+                                    @{
+                                        foreach (var item in Model.Tenants)
+                                        {
+                                            <option value="@item.CompanyId">@item.CompanyName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ToDoSubject">Subject/Content</label>
+                        <input type="text" class="form-control" id="ToDoSubject" placeholder="Subject/Content " />
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="ExpertImageName">Support Files</label>
+                        <input id="ExpertImageFile" type="file" class="custom-file-input" name="ExpertImageFile" size="1" style="background-color :#F5DEB3;opacity :1 !important;position:relative !important">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btnAddNewToDo">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <script src="~/js/jquery-3.3.1.min.js"></script>
 
 <script type="text/javascript">
     $(function() {
-        //loadToDoListData('@baseApiUrl','@userApiKey',@companyId);
+        //$('#divToDos').load("/PartialToDos?tenant=" + 0)
+        loadToDoListData(1)
     });
 
-
+    function filterByTenant(tenant) {
+        console.log(tenant);
+        $('#divToDos').load("/PartialToDos?tenant=" + tenant)
+    }
 </script>
