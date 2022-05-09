@@ -1,10 +1,13 @@
 ﻿//ToDo--------------------------------
-var baseApiUrl = 'http://localhost:5121';
-function loadToDoListData(apiKey,tenant) {
+
+function loadToDoListData(baseApiUrl, apiKey, tenant)
+{
+    var apifullurl = baseApiUrl + "/ToDo?key=" + apiKey + "&tenant=" + tenant;
+    console.log(apifullurl);
     $('#datatable_ToDoList').DataTable({
 
         "ajax": {
-            url: baseApiUrl + "/ToDo?key=" + apiKey + "&tenant=" + tenant,
+            url: apifullurl,
             "type": "GET",
             "Headers": { 'Id': '' },
             "dataSrc": function (response) {

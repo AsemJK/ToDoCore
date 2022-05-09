@@ -1,7 +1,18 @@
-﻿@{
+﻿@model List<ToDo>
+@{
     ViewData["Title"] = "Home Page";
+    var baseApiUrl = ViewBag.BaseApiUrl;
+    var userApiKey = ViewBag.ApiKey;
+    var companyId = ViewBag.CompanyId;
 }
-
+<div class="container">
+    <h3>Filters</h3>
+    <form action="/ToDos" method="get">
+        <label>Tenant</label>
+        <input name="tenant" class="form-control-sm" placeholder="Tenant" />
+    </form>
+    
+</div>
 <div class="table-responsive">
     <table id="datatable_ToDoList" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
@@ -15,14 +26,27 @@
                 <th class="disabled-sorting text-right"></th>
             </tr>
         </thead>
-
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.ToDoSubject</td>
+                    <td>@item.TeamMember</td>
+                    <td>@item.CreationDate</td>
+                    <td>@item.LastStatus</td>
+                    <td>@item.CompanyId</td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
     </table>
 </div>
 <script src="~/js/jquery-3.3.1.min.js"></script>
 
 <script type="text/javascript">
     $(function() {
-        loadToDoListData('QV0UV1JMXMT1L2S606ZI',1);
+        //loadToDoListData('@baseApiUrl','@userApiKey',@companyId);
     });
 
 

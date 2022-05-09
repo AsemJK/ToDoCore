@@ -1,4 +1,4 @@
-﻿namespace ToDo.Helper
+﻿namespace ToDoCore.Helper
 {
     public static class Constants
     {

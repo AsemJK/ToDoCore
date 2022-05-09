@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ToDo.Models;
+using ToDoCore.Api;
+using ToDoCore.Models;
 
-namespace ToDo.Controllers
+namespace ToDoCore.Controllers
 {
     public class HomeController : Controller
     {
@@ -18,11 +21,28 @@ namespace ToDo.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            //ViewBag.BaseApiUrl = "http://saas.pbmscore.com";
+            ViewBag.BaseApiUrl = "http://localhost:5121";
+            ViewBag.ApiKey = "QV0UV1JMXMT1L2S606ZI";
+            ViewBag.CompanyId = 1;
+            RestClient api = new RestClient();
+            var vmodel = await api.GetToDoList(ViewBag.BaseApiUrl, ViewBag.ApiKey, ViewBag.CompanyId);
+            return View(vmodel);
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> ToDos(int tenant)
+        {
+            //ViewBag.BaseApiUrl = "http://saas.pbmscore.com";
+            ViewBag.BaseApiUrl = "http://localhost:5121";
+            ViewBag.ApiKey = "QV0UV1JMXMT1L2S606ZI";
+            ViewBag.CompanyId = 1;
+            RestClient api = new RestClient();
+            var vmodel = await api.GetToDoList(ViewBag.BaseApiUrl, ViewBag.ApiKey, tenant);
+            return View("Index",vmodel);
+        }
         public IActionResult Privacy()
         {
             return View();
