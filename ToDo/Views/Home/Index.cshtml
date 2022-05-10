@@ -49,7 +49,7 @@
                     </div>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-sm-3">Tenants</div>
+                            <div class="col-sm-3">Tenant</div>
                             <div class="col-sm-9">
                                 <select asp-for="TenantId" class="form-control" id="dlToDoTenants">
                                     @{
@@ -65,13 +65,13 @@
 
                     <div class="form-group">
                         <label for="ToDoSubject">Subject/Content</label>
-                        <input type="text" class="form-control" id="ToDoSubject" placeholder="Subject/Content " />
+                        <textarea class="form-control" id="ToDoSubject" placeholder="Subject/Content" cols="40" rows="6"></textarea>
                     </div>
 
 
                     <div class="form-group">
-                        <label for="ExpertImageName">Support Files</label>
-                        <input id="ExpertImageFile" type="file" class="custom-file-input" name="ExpertImageFile" size="1" style="background-color :#F5DEB3;opacity :1 !important;position:relative !important">
+                        <label for="IssueImageFile">Support Files (Optional)</label>
+                        <input id="IssueImageFile" type="file" class="custom-file-input" name="IssueImageFile" size="1" style="background-color :#F5DEB3;opacity :1 !important;position:relative !important">
                     </div>
 
                     <div class="modal-footer">

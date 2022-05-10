@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using ToDoCore.Services;
 using ToDoCore.Helper;
 using ToDoCore.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace ToDoCore.Controllers
 {
@@ -27,9 +28,15 @@ namespace ToDoCore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ToDoViewModel model = new ToDoViewModel();
-            model.Tenants = await _restServices.GetTenantsList();
-            return View(model);
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("user")))
+            {
+                ViewBag.User = HttpContext.Session.GetString("user");
+                ToDoViewModel model = new ToDoViewModel();
+                model.Tenants = await _restServices.GetTenantsList();
+                return View(model);
+            }
+            else
+                return RedirectToAction("Login","Account");
         }
 
         [HttpGet("[action]")]
@@ -53,6 +60,12 @@ namespace ToDoCore.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> ToDo(int id)
+        {
+            var todoObj = await _restServices.ToDoDetail(id);
+            return View("ToDoDetail", todoObj);
         }
     }
 }

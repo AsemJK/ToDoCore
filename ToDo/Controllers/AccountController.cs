@@ -6,11 +6,16 @@ namespace ToDoCore.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Login");
         }
         public IActionResult Login()
         {
             return View();
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("user");
+            return RedirectToAction("Login");
         }
     }
 }
