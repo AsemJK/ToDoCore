@@ -39,8 +39,9 @@ namespace ToDoCore.Controllers.Api
             if (payload.Files.Count > 0)
             {
                 var formFile = payload.Files["file-1"];
-                fileNewNormalizedName = "service_" + DateTime.Now.Year.ToString() + new Random().Next().ToString() + ".jpg";
-                var fulPath = Path.Combine(_webHost.ContentRootPath, "wwwroot\\images\\issues\\" + fileNewNormalizedName);
+                fileNewNormalizedName = "task_" + DateTime.Now.Year.ToString() + new Random().Next().ToString() + ".jpg";
+                var fulPath = Path.Combine(_webHost.WebRootPath, "images/issues/" + fileNewNormalizedName);
+                //var fulPath = "/wwwroot/images/issues/" + fileNewNormalizedName;
                 using (FileStream fs = System.IO.File.Create(fulPath))
                 {
                     formFile.CopyTo(fs);
@@ -51,8 +52,9 @@ namespace ToDoCore.Controllers.Api
             {
                 objForm.CompanyId = Common.ToDecimalConvertObject(payload["TenantId"].ToString(), 1);
                 objForm.ToDoSubject = payload["ToDoSubject"].ToString();
+                objForm.ImageFileName = fileNewNormalizedName;
                 if (objForm.TeamMember == null)
-                    objForm.TeamMember = "Dev";
+                    objForm.TeamMember = HttpContext.Session.GetString("user");
                 if(objForm.CreationDate == null)
                     objForm.CreationDate = DateTime.Now;
                 if (objForm.LastStatus == null)

@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ToDoCore.Helper;
+using ToDoCore.Models;
 using ToDoCore.Services;
 
 namespace ToDoCore.Controllers.Api
@@ -16,24 +18,25 @@ namespace ToDoCore.Controllers.Api
             _restServices = restServices;
         }
         [HttpPost("[action]")]
-        public async Task<bool> Login(IFormCollection payLoad) 
+        public async Task<User> Login(IFormCollection payLoad) 
         {
             if (payLoad.Keys.Count > 0)
             {
                 string uname = payLoad["UserName"].ToString();
-                string pass = payLoad["Password"].ToString();
-                
+                string pass = payLoad["Password"].ToString();                
                 var res = _restServices.CheckLogin(uname, pass).Result;
-                if (res)
+                if (res.UserId > 0)
                 {
-                    HttpContext.Session.SetString("user", "test");
-                    return true;
+                    Constants.UserApiKey = res.ApiKey;
+                    Constants.UserCompanyId = res.CompanyId;
+                    HttpContext.Session.SetString("user", res.UserName);
+                    return res;
                 }
                 else
-                    return false;
+                    return new User();
             }
             else
-                return false;
+                return new User();
 
         }
     }

@@ -11,5 +11,6 @@ namespace ToDoCore.Models
 		public DateTime? CreationDate { get; set; } // datetime
 		public string LastStatus { get; set; } // varchar(255)
 		public decimal? CompanyId { get; set; }
+		public string ImageFileName { get; set; }
 	}
 }

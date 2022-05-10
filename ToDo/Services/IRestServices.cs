@@ -8,7 +8,7 @@ namespace ToDoCore.Services
     {
         Task<List<ToDo>> GetToDoList(int tenantId);
         Task<List<Tenant>> GetTenantsList();
-        Task<bool> CheckLogin(string userName, string password);
+        Task<User> CheckLogin(string userName, string password);
         Task<ToDo> AddToDo(ToDo todo);
         Task<ToDo> ToDoDetail(int id);
     }

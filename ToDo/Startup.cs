@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ToDoCore.Helper;
 using ToDoCore.Services;
 
 namespace ToDoCore
@@ -34,6 +35,8 @@ namespace ToDoCore
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+            Constants.ApiBaseUrl = Configuration.GetSection("AppSettings")["BaseApiUrl"].ToString();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +53,8 @@ namespace ToDoCore
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseStaticFiles();
+            
             app.UseSession();
             app.UseEndpoints(endpoints =>
             {

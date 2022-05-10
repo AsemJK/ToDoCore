@@ -9,7 +9,6 @@ function loadToDoListData(tenant) {
             "type": "GET",
             "Headers": { 'id': '' },
             "dataSrc": function (response) {
-                console.log(response);
                 if (response.iTotalRecords == 0) {
                 }
                 return response;
@@ -54,8 +53,7 @@ function CheckLogin(burl)
                 $("#loader").show();
             },
             success: function (response) {
-                console.log(response);
-                sessionStorage.setItem("ulogin",response);
+                sessionStorage.setItem("ulogin",response.UserName);
             },
             failure: function (response) {
                 console.log(response.responseText);
@@ -66,7 +64,7 @@ function CheckLogin(burl)
             complete: function (data) {
                 // Hide image container
                 $("#loader").hide();
-                if (sessionStorage.getItem("ulogin") == 'true')
+                if (sessionStorage.getItem("ulogin") != '')
                     window.location.href = "/Home/Index";
             }
         });
@@ -103,7 +101,6 @@ $('#btnAddNewToDo').click(function () {
                 $("#loader").show();
             },
             success: function (response) {
-                console.log(response);
                 newToDoId = response.id;
             },
             failure: function (response) {
@@ -113,7 +110,6 @@ $('#btnAddNewToDo').click(function () {
                 console.log(response.responseText);
             },
             complete: function (data) {
-                // Hide image container
                 $("#loader").hide();
                 if (newToDoId > 0)
                     window.location.href = '/Home/Index';

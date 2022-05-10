@@ -64,6 +64,7 @@ namespace ToDoCore.Controllers
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> ToDo(int id)
         {
+            ViewBag.User = HttpContext.Session.GetString("user");
             var todoObj = await _restServices.ToDoDetail(id);
             return View("ToDoDetail", todoObj);
         }

@@ -17,7 +17,7 @@ namespace ToDoCore.Services
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/ToDo?Key=" + Constants.TestUserApiKey + "&tenant=" + tenantId.ToString()))
+                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/ToDo?Key=" + Constants.UserApiKey + "&tenant=" + tenantId.ToString()))
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -35,7 +35,7 @@ namespace ToDoCore.Services
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/Saas/Tenants?Key=" + Constants.TestUserApiKey))
+                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/Saas/Tenants?Key=" + Constants.UserApiKey))
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -50,20 +50,20 @@ namespace ToDoCore.Services
             }
         }
 
-        public async Task<bool> CheckLogin(string userName, string password)
+        public async Task<User> CheckLogin(string userName, string password)
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/User/Login?userName=" + userName + "&password=" + password + "&key=" + Constants.TestUserApiKey))
+                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/User/Login?userName=" + userName + "&password=" + password + "&key=" + Constants.UserApiKey))
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<bool>(apiResponse);
+                        return JsonConvert.DeserializeObject<User>(apiResponse);
                     }
                     else
                     {
-                        return false;
+                        return new User();
                     }
                 }
             }
@@ -75,7 +75,7 @@ namespace ToDoCore.Services
             {
                 string jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject(todo).ToString();
                 var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(todo).ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync(Constants.ApiBaseUrl + "/ToDo/AddToDo?key=" + Constants.TestUserApiKey, content).Result;
+                var result = httpClient.PostAsync(Constants.ApiBaseUrl + "/ToDo/AddToDo?key=" + Constants.UserApiKey, content).Result;
                 //todono = Common.ToDecimalConvertObject(result.Content.ReadAsStringAsync().Result,0);
                 var objectModel = JsonConvert.DeserializeObject<ToDo>(result.Content.ReadAsStringAsync().Result);
                 return objectModel;
@@ -86,7 +86,7 @@ namespace ToDoCore.Services
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/ToDo/Detail/"+ id.ToString() +"?key=" + Constants.TestUserApiKey))
+                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/ToDo/Detail/"+ id.ToString() +"?key=" + Constants.UserApiKey))
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
