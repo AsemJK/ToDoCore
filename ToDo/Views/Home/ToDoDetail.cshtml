@@ -5,14 +5,35 @@
 
 <div class="container">
     <div class="form-group">
-        <h3>Task History</h3>
+        <a class="btn btn-block btn-outline-dark" href="/Home/Index"><i class="fa fa-backward"></i> Back To List</a>
+    </div>
+    <div class="form-group">
+       
         <h4>Main Task Content</h4>
-        <div class="justify-content-md-around">
+        <div class="jumbotron">
             @Model.ToDoSubject
         </div>
+        <hr />
+         <h3>Task History</h3>
     </div>
     <div class="form-group">
         <h5>Attachment(s)</h5>
         <img src="~/images/issues/@Model.ImageFileName" width="250px" />
     </div>
+    <hr />
+    <div id="divListOfTicketHistory"></div>
+    <hr />
+    <h4>Add New Comment</h4>
+    <div class="form-group">
+        <input type="hidden" value="@Model.Id" id="hfTickectId" />
+        <textarea id="toDoNewComment" class="form-control" cols="40" rows="6"></textarea>
+        <br />
+        <input type="button" id="btnSaveTicketComment" class="btn btn-success" value="Save" />
+    </div>
 </div>
+<script src="~/js/jquery-3.3.1.min.js"></script>
+<script>
+$(function() {
+    loadTicketHistoryListData(@Model.Id);
+});
+</script>

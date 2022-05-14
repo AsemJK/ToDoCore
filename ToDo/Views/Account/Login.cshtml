@@ -35,5 +35,18 @@
         $('#btnLogin').click(function() {
             CheckLogin('/Api/User/Login');
         });
+        $('#txtUserName').keydown(function(event) { 
+            if (event.keyCode == 13) {
+                $('#txtPassword').focus();
+                $('#txtPassword').select();
+                return false;
+            }
+        });
+         $('#txtPassword').keydown(function(event) {    
+             if (event.keyCode == 13) {
+                    CheckLogin('/Api/User/Login');
+                    return false;
+                }
+            });
     });
 </script>

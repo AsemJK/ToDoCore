@@ -1,9 +1,20 @@
-﻿//ToDo--------------------------------
+﻿//Common functions
+
+function ActionConfirm() {
+    var r = false;
+    r = confirm("Are you sure ?!");
+    if (r == true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//ToDo--------------------------------
 
 function loadToDoListData(tenant) {
-    var apifullurl = "/Api/ToDo?tenant=" + tenant;
+    var apifullurl = "/Api/ToDo?q=New&tenant=" + tenant;
     $('#datatable_ToDoList').DataTable({
-
         "ajax": {
             url: apifullurl,
             "type": "GET",
@@ -24,18 +35,51 @@ function loadToDoListData(tenant) {
             { data: "companyId" },
             {
                 data: "id",
-                "render": function (data, type, full, meta) { return '<a class="btn btn-round btn-info btn-icon btn-sm like" onclick="return ViewToDoHistory(' + full.id + ');return false" title="View"><i class="fas fa-eye"></i></a><a class="btn btn-round btn-danger btn-icon btn-sm remove" href="#!" onclick="DeleteService(' + full.id + ');return false;" title="Delete"><i class="fas fa-times"></i></a>'; }
+                "render": function (data, type, full, meta) { return '<div style="display: flex"><a class="btn btn-round btn-info btn-icon btn-sm like" href="#!" onclick="return ViewToDoHistory(' + full.id + ');return false" title="View"><i class="fas fa-eye"></i></a><a class="btn btn-round btn-success btn-icon btn-sm ok" href="#!" onclick="ToDoDone(' + full.id + ');return false;" title="Make Done"><i class="fas fa-check"></i></a></div>'; }
             }
         ]
     });
 }
 
+function ToDoDone(id) {
+    if (ActionConfirm()) {
+        var formData = new FormData();
+        formData.append('TicketId', id);
+        formData.append('ToDoNewStatus', 'Done');
+
+        $.ajax({
+            type: "POST",
+            url: '/api/ToDo/UpdateToDo',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $("#loader").show();
+            },
+            success: function (response) {
+
+            },
+            failure: function (response) {
+                console.log(response.responseText);
+            },
+            error: function (response) {
+                console.log(response.responseText);
+            },
+            complete: function (data) {
+                // Hide image container
+                $("#loader").hide();
+                window.location.href = "/ToDo/" + id;
+            }
+        });
+    }
+}
+
 function ViewToDoHistory(todoid) {
+    sessionStorage.setItem('tickId', todoid);
     window.location.href = '/ToDo/' + todoid;
 }
 
-function CheckLogin(burl)
-{
+function CheckLogin(burl) {
     var vusername = $('#txtUserName').val();
     var vpassword = $('#txtPassword').val();
     if (vusername != null) {
@@ -53,7 +97,7 @@ function CheckLogin(burl)
                 $("#loader").show();
             },
             success: function (response) {
-                sessionStorage.setItem("ulogin",response.UserName);
+                sessionStorage.setItem("ulogin", response.UserName);
             },
             failure: function (response) {
                 console.log(response.responseText);
@@ -124,3 +168,90 @@ $('#btnAddNewToDo').click(function () {
         }, 3000);
     }
 });
+
+$('#btnSaveTicketComment').click(function () {
+    var toDoId = sessionStorage.getItem('tickId');
+    var fileData = new FormData();
+    var newToDoDetailId = 0;
+    fileData.append('TicketId', toDoId);
+    fileData.append('ToDoNewComment', $("#toDoNewComment").val());
+    if ($("#toDoNewComment").val() != '') {
+        $.ajax({
+            type: "Post",
+            url: "/api/ToDo/AddToDoComment",
+            data: fileData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $("#loader").show();
+            },
+            success: function (response) {                
+                newToDoDetailId = response.id;
+            },
+            failure: function (response) {
+                console.log(response.responseText);
+            },
+            error: function (response) {
+                console.log(response.responseText);
+            },
+            complete: function (data) {
+                $("#loader").hide();
+                if (newToDoDetailId > 0)
+                    window.location.href = '/ToDo/' + toDoId;
+            }
+        });
+    }
+    else {
+        $('#divAlertMessage').html('لا يمكن إتمام العملية');
+        $('#divAlertMessage').show();
+        setTimeout(function myfunction() {
+            $('#divAlertMessage').hide();
+        }, 3000);
+    }
+});
+
+
+function loadTicketHistoryListData(ticketId) {
+    var apifullurl = "/Api/ToDo/ToDoHistory?ticketNo=" + ticketId;
+    var html = '';
+    if (ticketId  > 0) {
+        $.ajax({
+            type: "Get",
+            url: apifullurl,
+            data: null,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $("#loader").show();
+            },
+            success: function (response) {
+                response.forEach(function (value, key) {
+                    html += '<div class="card" style="width: 100%;">';
+                    html += '<div class="card-body">';
+                    html += '<h5 class="card-title">' + value.teamMember + ' - ' + value.extraDate + '</h5>';
+                    html += '<p class="card-text">' + value.notes +'</p>';
+                    html += '<a href="#" class="btn btn-primary">Reply</a>';
+                    html += '</div>';
+                    html += '<div>';
+                });
+            },
+            failure: function (response) {
+                console.log(response.responseText);
+            },
+            error: function (response) {
+                console.log(response.responseText);
+            },
+            complete: function (data) {
+                $("#loader").hide();
+                $('#divListOfTicketHistory').html(html);
+            }
+        });
+    }
+    else {
+        $('#divAlertMessage').html('لا يمكن إتمام العملية');
+        $('#divAlertMessage').show();
+        setTimeout(function myfunction() {
+            $('#divAlertMessage').hide();
+        }, 3000);
+    }
+}

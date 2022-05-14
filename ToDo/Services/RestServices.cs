@@ -13,11 +13,17 @@ namespace ToDoCore.Services
 {
     public class RestServices : IRestServices
     {
-        public async Task<List<ToDo>> GetToDoList(int tenantId)
+        /// <summary>
+        /// Last status : "All","New","Done"
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="lastStatus"></param>
+        /// <returns></returns>
+        public async Task<List<ToDo>> GetToDoList(int tenantId,string lastStatus)
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/ToDo?Key=" + Constants.UserApiKey + "&tenant=" + tenantId.ToString()))
+                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/ToDo?q="+ lastStatus + "&Key=" + Constants.UserApiKey + "&tenant=" + tenantId.ToString()))
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -96,6 +102,50 @@ namespace ToDoCore.Services
                     else
                     {
                         return new ToDo();
+                    }
+                }
+            }
+        }
+        public async Task<ToDo> UpdateToDo(ToDo todo)
+        {
+            decimal todono = 0;
+            using (var httpClient = new HttpClient())
+            {
+                string jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject(todo).ToString();
+                var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(todo).ToString(), Encoding.UTF8, "application/json");
+                var result = httpClient.PostAsync(Constants.ApiBaseUrl + "/ToDo/UpdateToDo?key=" + Constants.UserApiKey, content).Result;
+                //todono = Common.ToDecimalConvertObject(result.Content.ReadAsStringAsync().Result,0);
+                var objectModel = JsonConvert.DeserializeObject<ToDo>(result.Content.ReadAsStringAsync().Result);
+                return objectModel;
+            }
+        }
+
+        public async Task<ToDoDetail> AddToDoComment(ToDoDetail todoDetails)
+        {
+            decimal todono = 0;
+            using (var httpClient = new HttpClient())
+            {
+                string jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject(todoDetails).ToString();
+                var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(todoDetails).ToString(), Encoding.UTF8, "application/json");
+                var result = httpClient.PostAsync(Constants.ApiBaseUrl + "/ToDo/ToDoAddComment?key=" + Constants.UserApiKey, content).Result;
+                var objectModel = JsonConvert.DeserializeObject<ToDoDetail>(result.Content.ReadAsStringAsync().Result);
+                return objectModel;
+            }
+        }
+        public async Task<List<ToDoDetail>> GetToDoHistoryList(int ticketId)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/ToDo/ToDoDetails?Key=" + Constants.UserApiKey + "&ticketId=" + ticketId.ToString()))
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<List<ToDoDetail>>(apiResponse);
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
             }

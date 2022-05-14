@@ -42,7 +42,7 @@ namespace ToDoCore.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> PartialToDos(int tenant)
         {
-            var vmodel = await _restServices.GetToDoList(tenant);
+            var vmodel = await _restServices.GetToDoList(tenant,"New");
             return PartialView("_ToDoListPartial", vmodel);
         }
 

@@ -25,9 +25,9 @@ namespace ToDoCore.Controllers.Api
             _webHost = webHost;
         }
         [HttpGet]
-        public async Task<IActionResult> GetToDo()
+        public async Task<IActionResult> GetToDo(string q)
         {
-            var todos = await _restServices.GetToDoList(0);
+            var todos = await _restServices.GetToDoList(0,q);
             return Ok(todos);
         }
         [HttpPost("AddToDo")]
@@ -55,7 +55,7 @@ namespace ToDoCore.Controllers.Api
                 objForm.ImageFileName = fileNewNormalizedName;
                 if (objForm.TeamMember == null)
                     objForm.TeamMember = HttpContext.Session.GetString("user");
-                if(objForm.CreationDate == null)
+                if (objForm.CreationDate == null)
                     objForm.CreationDate = DateTime.Now;
                 if (objForm.LastStatus == null)
                     objForm.LastStatus = "New";
@@ -64,7 +64,46 @@ namespace ToDoCore.Controllers.Api
 
             return Ok(objNew);
         }
+        [HttpPost("UpdateToDo")]
+        public async Task<IActionResult> Update(IFormCollection payload)
+        {
+            //to update status only
 
-       
+            ToDo objForm = new ToDo();
+
+            if (payload.Keys.Count > 0)
+            {
+                int todoId = Common.ToIntConvertObject(payload["TicketId"].ToString(),0);
+                objForm = _restServices.GetToDoList(0,"New").Result.Find(e => e.Id.Equals(todoId));
+                objForm.LastStatus = payload["ToDoNewStatus"].ToString();
+                await _restServices.UpdateToDo(objForm);
+            }
+
+            return Ok(objForm);
+        }
+
+        [HttpPost("AddToDoComment")]
+        public async Task<IActionResult> InsertToDoComment(IFormCollection payload)
+        {
+            ToDoDetail objForm = new ToDoDetail();
+            ToDoDetail objNew = new ToDoDetail();
+           
+            if (payload.Keys.Count > 0)
+            {
+                objForm.ToDoId = Common.ToIntConvertObject(payload["TicketId"].ToString(), 0);
+                objForm.Notes = payload["ToDoNewComment"].ToString();
+                objForm.TeamMember = HttpContext.Session.GetString("user");
+                objNew = await _restServices.AddToDoComment(objForm);
+            }
+
+            return Ok(objNew);
+        }
+
+        [HttpGet("ToDoHistory")]
+        public async Task<IActionResult> GetToDoHistory(int ticketNo)
+        {
+            var todoHistory = await _restServices.GetToDoHistoryList(ticketNo);
+            return Ok(todoHistory);
+        }
     }
 }
