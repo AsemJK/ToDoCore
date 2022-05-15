@@ -38,7 +38,7 @@ function loadToDoListData(tenant, qst) {
             { data: "companyId" },
             {
                 data: "id",
-                "render": function (data, type, full, meta) { return '<div style="display: flex"><a class="btn btn-round btn-info btn-icon btn-sm like" href="#!" onclick="return ViewToDoHistory(' + full.id + ');return false" title="View"><i class="fas fa-eye"></i></a><a class="btn btn-round btn-success btn-icon btn-sm ok" href="#!" onclick="ToDoDone(' + full.id + ');return false;" title="Make Done"><i class="fas fa-check"></i></a></div>'; }
+                "render": function (data, type, full, meta) { return '<div style="display: flex"><a class="btn btn-round btn-info btn-icon btn-sm like mr-2" href="#!" onclick="return ViewToDoHistory(' + full.id + ');return false" title="View"><i class="fas fa-eye"></i></a><a class="btn btn-round btn-success btn-icon btn-sm ok mr-2" href="#!" onclick="ToDoDone(' + full.id + ');return false;" title="Make Done"><i class="fas fa-check"></i></a></div>'; }
             }
         ]
     });
