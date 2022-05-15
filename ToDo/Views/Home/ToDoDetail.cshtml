@@ -13,6 +13,7 @@
         <div class="jumbotron">
             @Model.ToDoSubject
         </div>
+       
         <hr />
          <h3>Task History</h3>
     </div>
@@ -35,5 +36,6 @@
 <script>
 $(function() {
     loadTicketHistoryListData(@Model.Id);
+    CKEDITOR.replace('toDoNewComment')
 });
 </script>

@@ -12,8 +12,11 @@ function ActionConfirm() {
 
 //ToDo--------------------------------
 
-function loadToDoListData(tenant) {
-    var apifullurl = "/Api/ToDo?q=New&tenant=" + tenant;
+function loadToDoListData(tenant, qst) {
+    if ($.fn.DataTable.isDataTable("#datatable_ToDoList"))
+        $('#datatable_ToDoList').DataTable().clear().destroy();
+
+    var apifullurl = "/Api/ToDo?q=" + qst +"&tenant=" + tenant;
     $('#datatable_ToDoList').DataTable({
         "ajax": {
             url: apifullurl,
@@ -126,11 +129,11 @@ function CheckLogin(burl) {
 $('#btnAddNewToDo').click(function () {
     var newToDoId = 0;
     var fileData = new FormData();
-
+    var ticketSubject = CKEDITOR.instances['ToDoSubject'].getData();
     var fileUpload = $("#IssueImageFile").get(0);
     var files = fileUpload.files;
     fileData.append('TenantId', $("#dlToDoTenants").val());
-    fileData.append('ToDoSubject', $("#ToDoSubject").val());
+    fileData.append('ToDoSubject', ticketSubject);
     fileData.append('file-1', files[0]);
 
     if ($("#ToDoSubject").val() != '') {
@@ -174,8 +177,9 @@ $('#btnSaveTicketComment').click(function () {
     var fileData = new FormData();
     var newToDoDetailId = 0;
     fileData.append('TicketId', toDoId);
-    fileData.append('ToDoNewComment', $("#toDoNewComment").val());
-    if ($("#toDoNewComment").val() != '') {
+    var commentBody = CKEDITOR.instances['toDoNewComment'].getData();
+    fileData.append('ToDoNewComment', commentBody);
+    if (commentBody != '') {
         $.ajax({
             type: "Post",
             url: "/api/ToDo/AddToDoComment",

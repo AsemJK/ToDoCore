@@ -49,10 +49,12 @@ namespace ToDoCore.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> ToDoAdd(ToDo todo)
         {
+            ViewBag.User = HttpContext.Session.GetString("user");
             return View(todo);
         }
         public IActionResult Privacy()
         {
+            ViewBag.User = HttpContext.Session.GetString("user");
             return View();
         }
 

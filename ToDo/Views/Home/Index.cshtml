@@ -12,8 +12,15 @@
 
 <div class="toolbar">
     <button class="btn btn-primary btn-round" id="mymodalbtn" data-toggle="modal" data-target="#NewToDoModal"><i class="fa-solid fa-square-plus"></i> Add</button>
+    
+    <button class="btn btn-primary btn-round float-right mr-2" id="btnFillAllTickets" onclick="loadToDoListData(1,'All');"><i class="fa-solid fa-clipboard-list"></i> All</button>
+    <button class="btn btn-primary btn-round float-right mr-2" id="btnFillAllTickets" onclick="loadToDoListData(1,'New');"><i class="fa-solid fa-book-open-reader"></i> New</button>
+    <button class="btn btn-primary btn-round float-right mr-2" id="btnFillAllTickets" onclick="loadToDoListData(1,'Done');"><i class="fa-solid fa-check-double"></i> Done</button>
+    <span class="float-lg-right mr-1">Filters </span>
 </div>
-
+<div class="toolbar">
+    
+</div>
 
 <div class="table-responsive">
     <table id="datatable_ToDoList" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -87,7 +94,8 @@
 <script type="text/javascript">
     $(function() {
         //$('#divToDos').load("/PartialToDos?tenant=" + 0)
-        loadToDoListData(1)
+        loadToDoListData(1,'New');
+        CKEDITOR.replace('ToDoSubject');
     });
 
     function filterByTenant(tenant) {
