@@ -3,7 +3,7 @@
     public static class Constants
     {
         public static string ApiBaseUrl = "";
-        public static string UserApiKey = "QV0UV1JMXMT1L2S606ZI";
+        public static string UserApiKey = "";
         public static decimal UserCompanyId = 1;
     }
 }

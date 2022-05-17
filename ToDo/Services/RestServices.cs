@@ -82,7 +82,6 @@ namespace ToDoCore.Services
                 string jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject(todo).ToString();
                 var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(todo).ToString(), Encoding.UTF8, "application/json");
                 var result = httpClient.PostAsync(Constants.ApiBaseUrl + "/ToDo/AddToDo?key=" + Constants.UserApiKey, content).Result;
-                //todono = Common.ToDecimalConvertObject(result.Content.ReadAsStringAsync().Result,0);
                 var objectModel = JsonConvert.DeserializeObject<ToDo>(result.Content.ReadAsStringAsync().Result);
                 return objectModel;
             }
@@ -114,7 +113,6 @@ namespace ToDoCore.Services
                 string jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject(todo).ToString();
                 var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(todo).ToString(), Encoding.UTF8, "application/json");
                 var result = httpClient.PostAsync(Constants.ApiBaseUrl + "/ToDo/UpdateToDo?key=" + Constants.UserApiKey, content).Result;
-                //todono = Common.ToDecimalConvertObject(result.Content.ReadAsStringAsync().Result,0);
                 var objectModel = JsonConvert.DeserializeObject<ToDo>(result.Content.ReadAsStringAsync().Result);
                 return objectModel;
             }

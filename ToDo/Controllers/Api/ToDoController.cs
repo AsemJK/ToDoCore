@@ -41,7 +41,6 @@ namespace ToDoCore.Controllers.Api
                 var formFile = payload.Files["file-1"];
                 fileNewNormalizedName = "task_" + DateTime.Now.Year.ToString() + new Random().Next().ToString() + ".jpg";
                 var fulPath = Path.Combine(_webHost.WebRootPath, "images/issues/" + fileNewNormalizedName);
-                //var fulPath = "/wwwroot/images/issues/" + fileNewNormalizedName;
                 using (FileStream fs = System.IO.File.Create(fulPath))
                 {
                     formFile.CopyTo(fs);
