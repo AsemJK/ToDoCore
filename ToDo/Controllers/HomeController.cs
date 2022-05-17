@@ -36,21 +36,26 @@ namespace ToDoCore.Controllers
                 return View(model);
             }
             else
-                return RedirectToAction("Login","Account");
+                return RedirectToAction("Login", "Account");
         }
 
         [HttpGet("[action]")]
         public async Task<IActionResult> PartialToDos(int tenant)
         {
-            var vmodel = await _restServices.GetToDoList(tenant,"New");
+            var vmodel = await _restServices.GetToDoList(tenant, "New");
             return PartialView("_ToDoListPartial", vmodel);
         }
 
         [HttpGet("[action]")]
         public async Task<IActionResult> ToDoAdd(ToDo todo)
         {
-            ViewBag.User = HttpContext.Session.GetString("user");
-            return View(todo);
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("user")))
+            {
+                ViewBag.User = HttpContext.Session.GetString("user");
+                return View(todo);
+            }
+            else
+                return RedirectToAction("Login", "Account");
         }
         public IActionResult Privacy()
         {
@@ -66,9 +71,15 @@ namespace ToDoCore.Controllers
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> ToDo(int id)
         {
-            ViewBag.User = HttpContext.Session.GetString("user");
-            var todoObj = await _restServices.ToDoDetail(id);
-            return View("ToDoDetail", todoObj);
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("user")))
+            {
+                ViewBag.User = HttpContext.Session.GetString("user");
+                var todoObj = await _restServices.ToDoDetail(id);
+                return View("ToDoDetail", todoObj);
+            }
+            else
+                return RedirectToAction("Login", "Account");
+
         }
     }
 }
