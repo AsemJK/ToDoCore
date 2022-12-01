@@ -1,6 +1,7 @@
 ﻿
 @model ToDo
 @{
+    var baseUrl = Context.Request.Scheme + "://"+ Context.Request.Host + "/images/issues";
 }
 
 <div class="container">
@@ -11,7 +12,7 @@
        
         <h4>Main Task Content</h4>
         <div class="jumbotron">
-            @Model.ToDoSubject
+            @Html.Raw(Model.ToDoSubject)
         </div>
        
         <hr />
@@ -19,7 +20,7 @@
     </div>
     <div class="form-group">
         <h5>Attachment(s)</h5>
-        <img src="~/images/issues/@Model.ImageFileName" width="auto" />
+        <a href="@baseUrl/@Model.ImageFileName" target="_blank"><img src="~/images/issues/@Model.ImageFileName" width="200" /></a>
     </div>
     <hr />
     <div id="divListOfTicketHistory"></div>

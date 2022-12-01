@@ -136,7 +136,7 @@ $('#btnAddNewToDo').click(function () {
     fileData.append('ToDoSubject', ticketSubject);
     fileData.append('file-1', files[0]);
 
-    if ($("#ToDoSubject").val() != '') {
+    if (ticketSubject != '') {
 
         $.ajax({
             type: "Post",

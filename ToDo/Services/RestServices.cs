@@ -60,7 +60,7 @@ namespace ToDoCore.Services
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/User/Login?userName=" + userName + "&password=" + password + "&key=" + Constants.UserApiKey))
+                using (var response = await httpClient.GetAsync(Constants.ApiBaseUrl + "/User/Login?userName=" + userName + "&password=" + password + "&key=xxxx"))
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
